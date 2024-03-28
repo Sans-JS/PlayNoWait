@@ -40,18 +40,19 @@ if (FORMULARIO_REGISTRO) {
       await GENERAR_USUARIO(USUARIO, GENERO, CIUDAD, EMAIL, FOTO);
 
       // Mostramos un mensaje de bienvenida en la interfaz de usuario
-      console.log(
+      alert(
         "Bienvenido " +
-          userCredentials.user.email +
-          " USUARIO CREADO EXITOSAMENTE"
+        userCredentials.user.email +
+        ". Usuario creado exitosamente."
       );
       window.location.href = "index.html";
     } catch (error) {
       // Si se produce un error durante la creación del usuario, manejamos diferentes casos de error
       if (error.code === "auth/email-already-in-use") {
-        console.log("El correo ya está en uso", "error");
+        alert("El correo ya está en uso");
       } else {
-        console.error("Algo salió mal :(", error);
+        alert("Algo salió mal. Por favor, inténtalo de nuevo.");
+        console.error("Error:", error);
       }
     }
   });

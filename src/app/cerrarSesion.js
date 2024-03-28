@@ -9,15 +9,20 @@ const logOut = document.querySelector("#logOut");
 if (logOut) {
   // Agrega un evento de escucha al elemento 'logOut' que se activa cuando se hace clic en él
   logOut.addEventListener("click", async () => {
-    // Realiza el cierre de sesión utilizando la función 'signOut' de Firebase Authentication
-    await signOut(auth);
+    try {
+      // Realiza el cierre de sesión utilizando la función 'signOut' de Firebase Authentication
+      await signOut(auth);
 
-    // Muestra un mensaje indicando que la sesión ha sido cerrada utilizando la función 'showMessage'
-    console.log("Sesión cerrada");
+      // Muestra una alerta indicando que la sesión ha sido cerrada
+      alert("Sesión cerrada correctamente");
 
-    // Inicia un temporizador que redirige al usuario a 'index.html' después de 2 segundos
-    setTimeout(() => {
-      window.location.href = "index.html";
-    }, 2000);
+      // Inicia un temporizador que redirige al usuario a 'index.html' después de 2 segundos
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 2000);
+    } catch (error) {
+      // Si se produce un error durante el cierre de sesión, muestra una alerta con el mensaje de error
+      alert("Error al cerrar sesión: " + error.message);
+    }
   });
 }

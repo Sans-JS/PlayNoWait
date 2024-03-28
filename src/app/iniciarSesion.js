@@ -27,15 +27,15 @@ if (FORMULARIO_REGISTRO) {
       window.location.href = "index.html";
 
       // Mostramos un mensaje de bienvenida en la interfaz de usuario
-      console.log("Welcome");
+      alert(`Bienvenido ${credentials.EMAIL}`);
     } catch (error) {
       // Si se produce un error durante el inicio de sesión, manejamos diferentes casos de error
       if (error.code === "auth/wrong-password") {
-        console.log("Correo o contraseña incorrecta, revisa de nuevo", "error");
+        alert("Correo o contraseña incorrecta, revisa de nuevo");
       } else if (error.code == "auth/user-not-found") {
-        console.log("El usuario no existe :(", "error");
+        alert("El usuario no existe :(");
       } else {
-        console.log("Algo salió mal, intenta de nuevo :(", "error");
+        alert("Algo salió mal, intenta de nuevo :(");
       }
     }
   });

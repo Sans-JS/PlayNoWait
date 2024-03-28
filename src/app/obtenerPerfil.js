@@ -1,4 +1,5 @@
-import { ACTUALIZAR_USUARIO, EDITAR_USUARIO } from "./firebase.js";
+import { ACTUALIZAR_USUARIO, EDITAR_USUARIO, ELIMINAR_USUARIO } from "./firebase.js";
+import { auth } from "./firebase.js"; // Importa el objeto 'auth' desde un archivo local llamado 'firebase.js'
 
 // Selecciona el primer elemento en el documento HTML que tenga la clase "Main-Content"
 const PERFIL_HTML = document.querySelector(".Main-content");
@@ -27,38 +28,43 @@ export const OBTENER_PERFIL = (data, user) => {
     if (usuarioActual) {
       const USUARIO = usuarioActual.data(); // Obtiene los datos del usuario actual
 
-      // Crea un fragmento de HTML usando los datos del usuario actual
+      // Crea un fragmento de HTML usando los datos del usuario actual, incluyendo el botón para eliminar el perfil
       const header = `
-          <header>
-            <span class="image">
-              <img src="${USUARIO.Foto}" alt="user-icon" />
-            </span>
-            
-            <h2 style="color: #fff;">
-              Bienvenido ${USUARIO.nombreUsuario} a Play No Wait
-            </h2>
+      <header>
+        <span class="image">
+          <img src="${USUARIO.Foto}" alt="user-icon" />
+        </span>
+        
+        <h2 style="color: #fff;">
+          Bienvenido ${USUARIO.nombreUsuario} a Play No Wait
+        </h2>
 
-            <p>
-              Correo: ${USUARIO.Correo}
-            </p>
+        <p>
+          Correo: ${USUARIO.Correo}
+        </p>
 
-            <p>
-            Género: ${USUARIO.Genero}
-            </p>
+        <p>
+          Género: ${USUARIO.Genero}
+        </p>
 
-            <p>
-              Ciudad: ${USUARIO.Ciudad}
-            </p>
+        <p>
+          Ciudad: ${USUARIO.Ciudad}
+        </p>
 
-						<button class="button primary Editar"
-            data-bs-toggle="modal" 
-            data-bs-target="#editarPerfilModal"
-            data-id="${usuarioActual.id}">
-              Editar Perfil
-            </button>
-          </header>
-          
-          `;
+        <button class="button primary Editar"
+          data-bs-toggle="modal" 
+          data-bs-target="#editarPerfilModal"
+          data-id="${usuarioActual.id}">
+          Editar Perfil
+        </button>
+        
+        <button class="button danger Eliminar"
+          data-id="${usuarioActual.id}">
+          Eliminar Perfil
+        </button>
+      </header>
+      `;
+
       // Establece el contenido HTML del elemento seleccionado en el documento
       // con la clase 'content' como el fragmento de HTML creado
       PERFIL_HTML.innerHTML = header;
@@ -85,6 +91,40 @@ export const OBTENER_PERFIL = (data, user) => {
         });
       });
 
+      // Agrega un evento de clic a cada botón 'Eliminar'
+      const BOTON_ELIMINAR = PERFIL_HTML.querySelectorAll('.Eliminar');
+      BOTON_ELIMINAR.forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          // Obtiene el ID del usuario desde el atributo 'data-id' del botón
+          const userId = e.currentTarget.dataset.id;
+          try {
+            // Solicita confirmación al usuario antes de eliminar el perfil
+            const confirmacion = confirm("¿Estás seguro de que deseas eliminar tu perfil? Esta acción no se puede deshacer.");
+            if (confirmacion) {
+              // Elimina el perfil de Firebase Authentication
+              await auth.currentUser.delete();
+
+              // Elimina el perfil de la base de datos utilizando la función 'ELIMINAR_USUARIO'
+              await ELIMINAR_USUARIO(userId);
+
+              // Muestra una alerta indicando que el perfil ha sido eliminado
+              alert("Perfil eliminado");
+
+              // Redirige al usuario a 'index.html' después de 2 segundos
+              setTimeout(() => {
+                window.location.href = "index.html";
+              }, 2000);
+            } else {
+              // Muestra un mensaje indicando que la eliminación del perfil ha sido cancelada
+              alert("Eliminación de perfil cancelada");
+            }
+          } catch (error) {
+            // Muestra una alerta en caso de error
+            alert("Error al eliminar el perfil: " + error.message);
+          }
+        });
+      });
+
       // Agrega un evento de envío al formulario para actualizar el usuario
       EDITAR_PERFIL_MODAL.querySelector('.editarPerfilForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -96,14 +136,18 @@ export const OBTENER_PERFIL = (data, user) => {
 
           // Actualiza el usuario utilizando la función 'ACTUALIZAR_USUARIO'
           await ACTUALIZAR_USUARIO(id, { Genero: GENERO.value, nombreUsuario: NOMBRE_USUARIO.value, Ciudad: CIUDAD.value });
-          console.log("Usuario actualizado, recargue para visualizar los cambios");
+          // Muestra una alerta indicando que el usuario ha sido actualizado
+          alert("Usuario actualizado, recargue para visualizar los cambios");
+
           // Oculta el modal de edición después de actualizar el usuario
           const modal = bootstrap.Modal.getInstance(EDITAR_PERFIL_MODAL);
           modal.hide();
         } catch (error) {
-          console.log(error.message, "error");
+          // Muestra una alerta en caso de error
+          alert("Error al actualizar el usuario: " + error.message);
         }
       });
+
 
     } else {
       // Si no se encuentra la información del usuario actual, muestra un mensaje de error
