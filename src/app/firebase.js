@@ -1,20 +1,8 @@
 //Aquí se importan las funciones que necesites del SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  deleteDoc,
-  doc,
-  getDoc,
-  updateDoc,
-} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, deleteDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-firestore.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-auth.js";
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-} from "https://www.gstatic.com/firebasejs/10.4.0/firebase-storage.js";
+
 // Añade más productos de SDKs Firebase de este link
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -33,14 +21,6 @@ const firebaseConfig = {
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-export const storage = getStorage(app);
-
-export function uploadFile(file) {
-  const storageRef = ref(storage);
-  uploadBytes(storageRef, file).then((snapshot) => {
-    console.log(snapshot);
-  });
-}
 
 //FUNCIONES PARA GENERAR NUEVOS PUBLICACIONES
 export const GENERAR_USUARIO = (nombreUsuario, Genero, Ciudad, Correo, Foto) =>
@@ -51,6 +31,7 @@ export const GENERAR_USUARIO = (nombreUsuario, Genero, Ciudad, Correo, Foto) =>
     Correo,
     Foto,
   });
+
 //FUNCIONES PARA ELIMINAR PRODUCTOS
 export const ELIMINAR_USUARIO = (id) => deleteDoc(doc(db, "Usuarios", id));
 
