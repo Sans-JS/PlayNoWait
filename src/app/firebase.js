@@ -35,9 +35,9 @@ export const GENERAR_USUARIO = (nombreUsuario, Genero, Ciudad, Correo, Foto) =>
 //FUNCIONES PARA ELIMINAR PRODUCTOS
 export const ELIMINAR_USUARIO = (id) => deleteDoc(doc(db, "Usuarios", id));
 
-//FUNCIONES PARA EDITAR LOS VALORES DE LOS COMENTARIOS
+//FUNCIONES PARA EDITAR LOS VALORES DE LOS USUARIOS
 export const EDITAR_USUARIO = (id) => getDoc(doc(db, "Usuarios", id));
 
-//FUNCIONES PARA GUARDAR LOS CAMBIOS DE LOS PRODUCTOS
+//FUNCIONES PARA GUARDAR LOS CAMBIOS DE LOS USUARIOS
 export const ACTUALIZAR_USUARIO = (id, newFields) =>
   updateDoc(doc(db, "Usuarios", id), newFields);
