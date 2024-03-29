@@ -10,7 +10,6 @@ import "./app/cerrarSesion.js";
 onAuthStateChanged(auth, async (user) => {
   loginCheck(user);
   if (user) {
-    console.log(user.email);
     const querySnapshot = await getDocs(collection(db, "Usuarios"));
     OBTENER_PERFIL(querySnapshot.docs, user);
   }
